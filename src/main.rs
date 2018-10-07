@@ -8,9 +8,10 @@ extern crate serde;
 extern crate clap;
 use clap::{App, Arg, SubCommand};
 
-const VERSION: &str = "0.1.0";
-
 mod task;
+use task::Task;
+
+const VERSION: &str = "0.1.0";
 
 fn main() {
     let matches = App::new("td")
@@ -23,7 +24,7 @@ fn main() {
                 .version(VERSION),
         ).get_matches();
     if let Some(matches) = matches.subcommand_matches("new") {
-        let task = task::new();
+        let task = Task::new();
         match task.save() {
             Ok(_) => (),
             Err(why) => println!("{}", why),

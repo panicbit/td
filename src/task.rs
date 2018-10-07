@@ -6,14 +6,6 @@ use dirs::data_local_dir;
 
 use chrono::Local;
 
-fn first_letter_to_upper(s: &str) -> String {
-    let mut chars = s.chars();
-    match chars.next() {
-        None => String::new(),
-        Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
-    }
-}
-
 // TODO: is the task done
 // TODO: description (maybe)
 #[derive(Serialize, Deserialize, Debug)]
@@ -23,41 +15,40 @@ pub struct Task {
     desire: String,
 }
 
-pub fn new() -> Task {
-    print!("My task is to ");
-    io::stdout().flush().unwrap();
-
-    let mut task = String::new();
-    io::stdin()
-        .read_line(&mut task)
-        .expect("Failed to read line");
-    task = first_letter_to_upper(&task);
-    task = task.trim().to_string();
-
-    print!("in order to ");
-    io::stdout().flush().unwrap();
-    let mut outcome = String::new();
-    io::stdin()
-        .read_line(&mut outcome)
-        .expect("Failed to read line");
-    outcome = outcome.trim().to_string();
-
-    print!("because I want to ");
-    io::stdout().flush().unwrap();
-    let mut desire = String::new();
-    io::stdin()
-        .read_line(&mut desire)
-        .expect("Failed to read line");
-    desire = desire.trim().to_string();
-
-    Task {
-        task: task,
-        outcome: outcome,
-        desire: desire,
-    }
-}
-
 impl Task {
+    pub fn new() -> Self {
+        print!("My task is to ");
+        io::stdout().flush().unwrap();
+
+        let mut task = String::new();
+        io::stdin()
+            .read_line(&mut task)
+            .expect("Failed to read line");
+        task = first_letter_to_upper(&task);
+        task = task.trim().to_string();
+
+        print!("in order to ");
+        io::stdout().flush().unwrap();
+        let mut outcome = String::new();
+        io::stdin()
+            .read_line(&mut outcome)
+            .expect("Failed to read line");
+        outcome = outcome.trim().to_string();
+
+        print!("because I want to ");
+        io::stdout().flush().unwrap();
+        let mut desire = String::new();
+        io::stdin()
+            .read_line(&mut desire)
+            .expect("Failed to read line");
+        desire = desire.trim().to_string();
+
+        Task {
+            task: task,
+            outcome: outcome,
+            desire: desire,
+        }
+    }
     pub fn print(&self) {
         println!("{}", self.task);
         println!("in order to {}", self.outcome);
@@ -81,5 +72,13 @@ impl Task {
         let mut file = File::create(&task_path)?;
         file.write_all(super::ron::ser::to_string(&self).unwrap().as_bytes())?;
         Ok(())
+    }
+}
+
+fn first_letter_to_upper(s: &str) -> String {
+    let mut chars = s.chars();
+    match chars.next() {
+        None => String::new(),
+        Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
     }
 }
