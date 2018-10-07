@@ -23,7 +23,7 @@ pub struct Task {
     desire: String,
 }
 
-pub fn new_task() -> Task {
+pub fn new() -> Task {
     print!("My task is to ");
     io::stdout().flush().unwrap();
 
