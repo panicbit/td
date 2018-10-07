@@ -23,7 +23,7 @@ fn main() {
                 .version(VERSION),
         ).get_matches();
     if let Some(matches) = matches.subcommand_matches("new") {
-        let task = task::new_task();
+        let task = task::new();
         match task.save() {
             Ok(_) => (),
             Err(why) => println!("{}", why),
