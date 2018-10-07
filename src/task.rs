@@ -6,14 +6,6 @@ use dirs::data_local_dir;
 
 use chrono::Local;
 
-fn first_letter_to_upper(s: &str) -> String {
-    let mut chars = s.chars();
-    match chars.next() {
-        None => String::new(),
-        Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
-    }
-}
-
 // TODO: is the task done
 // TODO: description (maybe)
 #[derive(Serialize, Deserialize, Debug)]
@@ -80,5 +72,13 @@ impl Task {
         let mut file = File::create(&task_path)?;
         file.write_all(super::ron::ser::to_string(&self).unwrap().as_bytes())?;
         Ok(())
+    }
+}
+
+fn first_letter_to_upper(s: &str) -> String {
+    let mut chars = s.chars();
+    match chars.next() {
+        None => String::new(),
+        Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
     }
 }
