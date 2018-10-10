@@ -1,5 +1,5 @@
 use std::fs::{create_dir, File};
-use std::io::{self, Write};
+use std::io::{self, Read, Write};
 use std::path::Path;
 
 use dirs::data_local_dir;
@@ -49,11 +49,36 @@ impl Task {
             desire: desire,
         }
     }
-    pub fn to_string(&self) -> String {
+    fn to_string(&self) -> String {
         format!(
-            "{}\nin order to{}\nbecause I want to{}",
+            "{}\nin order to {}\nbecause I want to {}\n",
             self.task, self.outcome, self.desire
         )
+    }
+
+    pub fn list_all() -> super::std::io::Result<()> {
+        let data_local_dir = match data_local_dir() {
+            Some(dir) => dir,
+            None => panic!("Could not open the local data directory"),
+        };
+        let td_path = Path::new(&data_local_dir).join("td");
+        if !td_path.exists() {
+            println!("Seems like you haven't added any tasks yet.");
+            println!("Try adding some with `td new`.");
+            return Ok(());
+        }
+        for (n, entry) in super::std::fs::read_dir(td_path)?.enumerate() {
+            let entry = entry?;
+            let mut f = File::open(entry.path()).unwrap_or_else(|e| panic!("{}", e));
+            let mut contents = String::new();
+            f.read_to_string(&mut contents)
+                .unwrap_or_else(|e| panic!("{}", e));
+            let task: Task =
+                super::ron::de::from_str(&contents).unwrap_or_else(|e| panic!("{}", e));
+            println!("{}. {}", n + 1, task.to_string());
+        }
+
+        Ok(())
     }
 
     pub fn save(&self) -> super::std::io::Result<()> {
