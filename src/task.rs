@@ -49,10 +49,11 @@ impl Task {
             desire: desire,
         }
     }
-    pub fn print(&self) {
-        println!("{}", self.task);
-        println!("in order to {}", self.outcome);
-        println!("because I want to {}", self.desire);
+    pub fn to_string(&self) -> String {
+        format!(
+            "{}\nin order to{}\nbecause I want to{}",
+            self.task, self.outcome, self.desire
+        )
     }
 
     pub fn save(&self) -> super::std::io::Result<()> {
