@@ -30,6 +30,15 @@ fn main() {
             SubCommand::with_name("list")
                 .about("List all the tasks")
                 .version(VERSION),
+        ).subcommand(
+            SubCommand::with_name("delete")
+                .about("Delete a task")
+                .version(VERSION)
+                .arg(
+                    Arg::with_name("task")
+                        .index(1)
+                        .help("Number of the task to be deleted"),
+                ),
         ).get_matches();
     if let Some(matches) = matches.subcommand_matches("new") {
         let task = Task::new();
@@ -42,6 +51,16 @@ fn main() {
         match Task::list_all() {
             Ok(_) => (),
             Err(why) => println!("{}", why),
+        }
+    }
+    if let Some(matches) = matches.subcommand_matches("delete") {
+        if let Some(task) = matches.value_of("task") {
+            match Task::delete(task) {
+                Ok(_) => (),
+                Err(why) => println!("{}", why),
+            }
+        } else {
+            println!("Which one? Try e.g. `td delete 1`");
         }
     }
 }
