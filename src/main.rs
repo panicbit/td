@@ -1,5 +1,3 @@
-use std::path::Path;
-
 #[macro_use]
 extern crate serde_derive;
 extern crate chrono;
@@ -10,7 +8,6 @@ extern crate clap;
 use clap::{App, Arg, SubCommand};
 
 extern crate dirs;
-use dirs::data_local_dir;
 
 mod task;
 use task::Task;
@@ -40,14 +37,14 @@ fn main() {
                         .help("Number of the task to be deleted"),
                 ),
         ).get_matches();
-    if let Some(matches) = matches.subcommand_matches("new") {
+    if let Some(_matches) = matches.subcommand_matches("new") {
         let task = Task::new();
         match task.save() {
             Ok(_) => (),
             Err(why) => println!("{}", why),
         }
     }
-    if let Some(matches) = matches.subcommand_matches("list") {
+    if let Some(_matches) = matches.subcommand_matches("list") {
         match Task::list_all() {
             Ok(_) => (),
             Err(why) => println!("{}", why),
