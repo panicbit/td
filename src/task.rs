@@ -49,6 +49,7 @@ impl Task {
             desire: desire,
         }
     }
+
     fn to_string(&self) -> String {
         format!(
             "{}\nin order to {}\nbecause I want to {}\n",
@@ -56,7 +57,7 @@ impl Task {
         )
     }
 
-    pub fn list_all() -> super::std::io::Result<()> {
+    pub fn list_all() -> Result<()> {
         let data_local_dir = match data_local_dir() {
             Some(dir) => dir,
             None => panic!("Could not open the local data directory"),
@@ -67,21 +68,20 @@ impl Task {
             println!("Try adding some with `td new`.");
             return Ok(());
         }
-        for (n, entry) in super::std::fs::read_dir(td_path)?.enumerate() {
+        for (n, entry) in read_dir(td_path)?.enumerate() {
             let entry = entry?;
             let mut f = File::open(entry.path()).unwrap_or_else(|e| panic!("{}", e));
             let mut contents = String::new();
             f.read_to_string(&mut contents)
                 .unwrap_or_else(|e| panic!("{}", e));
-            let task: Task =
-                super::ron::de::from_str(&contents).unwrap_or_else(|e| panic!("{}", e));
+            let task: Task = ::ron::de::from_str(&contents).unwrap_or_else(|e| panic!("{}", e));
             println!("{}. {}", n + 1, task.to_string());
         }
 
         Ok(())
     }
 
-    pub fn save(&self) -> super::std::io::Result<()> {
+    pub fn save(&self) -> Result<()> {
         let data_local_dir = match data_local_dir() {
             Some(dir) => dir,
             None => panic!("Could not open the local data directory"),
@@ -95,11 +95,11 @@ impl Task {
         let task_path_string = td_path.join(filename); // that's atrocious
         let task_path = Path::new(&task_path_string);
         let mut file = File::create(&task_path)?;
-        file.write_all(super::ron::ser::to_string(&self).unwrap().as_bytes())?;
+        file.write_all(::ron::ser::to_string(&self).unwrap().as_bytes())?;
         Ok(())
     }
 
-    pub fn delete(task_n: &str) -> super::std::io::Result<()> {
+    pub fn delete(task_n: &str) -> Result<()> {
         let n: usize = task_n.trim().parse().unwrap_or_else(|e| panic!("{}", e));
         let data_local_dir = match data_local_dir() {
             Some(dir) => dir,
