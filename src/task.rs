@@ -1,5 +1,5 @@
-use std::fs::{create_dir, File};
-use std::io::{self, Read, Write};
+use std::fs::{create_dir, read_dir, remove_file, DirEntry, File};
+use std::io::{self, Read, Result, Write};
 use std::path::Path;
 
 use dirs::data_local_dir;
@@ -97,6 +97,33 @@ impl Task {
         let task_path = Path::new(&task_path_string);
         let mut file = File::create(&task_path)?;
         file.write_all(super::ron::ser::to_string(&self).unwrap().as_bytes())?;
+        Ok(())
+    }
+
+    pub fn delete(task_n: &str) -> super::std::io::Result<()> {
+        let n: usize = task_n.trim().parse().unwrap_or_else(|e| panic!("{}", e));
+        let data_local_dir = match data_local_dir() {
+            Some(dir) => dir,
+            None => panic!("Could not open the local data directory"),
+        };
+        let td_path = Path::new(&data_local_dir).join("td");
+        if !td_path.exists() {
+            println!("Seems like you haven't added any tasks yet.");
+            println!("Try adding some with `td new`.");
+            return Ok(());
+        }
+        let all_tasks: Vec<DirEntry> = read_dir(td_path)?.filter_map(Result::ok).collect();
+        // TODO improve code below
+        let target_task = &all_tasks.get(n - 1);
+        let target_task = match target_task {
+            Some(task) => task,
+            None => {
+                println!("Task not found.");
+                return Ok(());
+            }
+        };
+        remove_file(target_task.path())?;
+        println!("Successfully removed the task.");
         Ok(())
     }
 }
