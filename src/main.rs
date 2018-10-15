@@ -1,5 +1,3 @@
-use std::path::Path;
-
 #[macro_use]
 extern crate serde_derive;
 extern crate chrono;
@@ -10,7 +8,6 @@ extern crate clap;
 use clap::{App, Arg, SubCommand};
 
 extern crate dirs;
-use dirs::data_local_dir;
 
 mod task;
 use task::Task;
