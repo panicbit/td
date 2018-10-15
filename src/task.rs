@@ -90,8 +90,7 @@ impl Task {
         if !td_path.exists() {
             create_dir(&td_path)?;
         }
-        let now = Local::now().to_rfc3339(); // TODO: make it nicer (maybe)
-                                             // TODO: consider replacing spaces with something else
+        let now = Local::now().to_rfc3339();
         let filename = format!("{} {}", now, &self.task);
         let task_path_string = td_path.join(filename); // that's atrocious
         let task_path = Path::new(&task_path_string);
