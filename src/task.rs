@@ -17,36 +17,16 @@ pub struct Task {
 
 impl Task {
     pub fn new() -> Self {
-        print!("My task is to ");
-        let mut task = String::new();
-        io::stdout().flush().unwrap();
-        io::stdin()
-            .read_line(&mut task)
-            .expect("Failed to read line");
-        task = first_letter_to_upper(&task);
-        task = task.trim().to_string();
+        let task = ask("My task is to ");
+        let task = first_letter_to_upper({task}.trim());
 
-        print!("in order to ");
-        let mut outcome = String::new();
-        io::stdout().flush().unwrap();
-        io::stdin()
-            .read_line(&mut outcome)
-            .expect("Failed to read line");
-        outcome = outcome.trim().to_string();
+        let outcome = ask("in order to ");
+        let outcome = {outcome}.trim().to_string();
 
-        print!("because I want to ");
-        let mut desire = String::new();
-        io::stdout().flush().unwrap();
-        io::stdin()
-            .read_line(&mut desire)
-            .expect("Failed to read line");
-        desire = desire.trim().to_string();
+        let desire = ask("because I want to ");
+        let desire = {desire}.trim().to_string();
 
-        Task {
-            task: task,
-            outcome: outcome,
-            desire: desire,
-        }
+        Task { task, outcome, desire }
     }
 
     fn to_string(&self) -> String {
@@ -137,6 +117,19 @@ impl Task {
 
         Ok(())
     }
+}
+
+fn ask(prompt: &str) -> String {
+    print!("{}", prompt);
+
+    let mut input = String::new();
+
+    io::stdout().flush().unwrap();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read line");
+
+    input
 }
 
 fn first_letter_to_upper(s: &str) -> String {
