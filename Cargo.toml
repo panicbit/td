@@ -7,6 +7,6 @@ authors = ["sarna <sarna.dev@protonmail.com>"]
 clap = "2.32.0"
 serde = "1"
 serde_derive = "1"
-ron = "*"
+ron = "0.4.0"
 dirs = "1"
 chrono = "0.4"
