@@ -18,9 +18,8 @@ pub struct Task {
 impl Task {
     pub fn new() -> Self {
         print!("My task is to ");
-        io::stdout().flush().unwrap();
-
         let mut task = String::new();
+        io::stdout().flush().unwrap();
         io::stdin()
             .read_line(&mut task)
             .expect("Failed to read line");
@@ -28,16 +27,16 @@ impl Task {
         task = task.trim().to_string();
 
         print!("in order to ");
-        io::stdout().flush().unwrap();
         let mut outcome = String::new();
+        io::stdout().flush().unwrap();
         io::stdin()
             .read_line(&mut outcome)
             .expect("Failed to read line");
         outcome = outcome.trim().to_string();
 
         print!("because I want to ");
-        io::stdout().flush().unwrap();
         let mut desire = String::new();
+        io::stdout().flush().unwrap();
         io::stdin()
             .read_line(&mut desire)
             .expect("Failed to read line");
