@@ -63,18 +63,23 @@ impl Task {
             None => panic!("Could not open the local data directory"),
         };
         let td_path = Path::new(&data_local_dir).join("td");
+
         if !td_path.exists() {
             println!("Seems like you haven't added any tasks yet.");
             println!("Try adding some with `td new`.");
             return Ok(());
         }
+
         for (n, entry) in read_dir(td_path)?.enumerate() {
             let entry = entry?;
             let mut f = File::open(entry.path()).unwrap_or_else(|e| panic!("{}", e));
             let mut contents = String::new();
+
             f.read_to_string(&mut contents)
                 .unwrap_or_else(|e| panic!("{}", e));
+
             let task: Task = ::ron::de::from_str(&contents).unwrap_or_else(|e| panic!("{}", e));
+
             println!("{}. {}", n + 1, task.to_string());
         }
 
@@ -87,15 +92,19 @@ impl Task {
             None => panic!("Could not open the local data directory"),
         };
         let td_path = Path::new(&data_local_dir).join("td");
+
         if !td_path.exists() {
             create_dir(&td_path)?;
         }
+
         let now = Local::now().to_rfc3339();
         let filename = format!("{} {}", now, &self.task);
         let task_path_string = td_path.join(filename); // that's atrocious
         let task_path = Path::new(&task_path_string);
         let mut file = File::create(&task_path)?;
+
         file.write_all(::ron::ser::to_string(&self).unwrap().as_bytes())?;
+
         Ok(())
     }
 
@@ -106,11 +115,13 @@ impl Task {
             None => panic!("Could not open the local data directory"),
         };
         let td_path = Path::new(&data_local_dir).join("td");
+
         if !td_path.exists() {
             println!("Seems like you haven't added any tasks yet.");
             println!("Try adding some with `td new`.");
             return Ok(());
         }
+
         let all_tasks: Vec<DirEntry> = read_dir(td_path)?.filter_map(Result::ok).collect();
         // TODO improve code below
         let target_task = &all_tasks.get(n - 1);
@@ -121,14 +132,17 @@ impl Task {
                 return Ok(());
             }
         };
+
         remove_file(target_task.path())?;
         println!("Successfully removed the task.");
+
         Ok(())
     }
 }
 
 fn first_letter_to_upper(s: &str) -> String {
     let mut chars = s.chars();
+
     match chars.next() {
         None => String::new(),
         Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),

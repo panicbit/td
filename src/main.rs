@@ -36,19 +36,23 @@ fn main() {
                         .help("Number of the task to be deleted"),
                 ),
         ).get_matches();
+
     if let Some(_matches) = matches.subcommand_matches("new") {
         let task = Task::new();
+
         match task.save() {
             Ok(_) => (),
             Err(why) => println!("{}", why),
         }
     }
+
     if let Some(_matches) = matches.subcommand_matches("list") {
         match Task::list_all() {
             Ok(_) => (),
             Err(why) => println!("{}", why),
         }
     }
+
     if let Some(matches) = matches.subcommand_matches("delete") {
         if let Some(task) = matches.value_of("task") {
             match Task::delete(task) {
