@@ -1,9 +1,8 @@
 use std::fs::{create_dir, read_dir, remove_file, DirEntry, File};
 use std::io::{self, Read, Result, Write};
 use std::path::Path;
-
+use std::fmt;
 use dirs::data_local_dir;
-
 use chrono::Local;
 
 // TODO: is the task done
@@ -29,13 +28,6 @@ impl Task {
         Task { task, outcome, desire }
     }
 
-    fn to_string(&self) -> String {
-        format!(
-            "{}\nin order to {}\nbecause I want to {}\n",
-            self.task, self.outcome, self.desire
-        )
-    }
-
     pub fn list_all() -> Result<()> {
         let data_local_dir = match data_local_dir() {
             Some(dir) => dir,
@@ -59,7 +51,7 @@ impl Task {
 
             let task: Task = ::ron::de::from_str(&contents).unwrap_or_else(|e| panic!("{}", e));
 
-            println!("{}. {}", n + 1, task.to_string());
+            println!("{}. {}", n + 1, task);
         }
 
         Ok(())
@@ -116,6 +108,16 @@ impl Task {
         println!("Successfully removed the task.");
 
         Ok(())
+    }
+}
+
+impl fmt::Display for Task {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            fmt,
+            "{}\nin order to {}\nbecause I want to {}\n",
+            self.task, self.outcome, self.desire
+        )
     }
 }
 
