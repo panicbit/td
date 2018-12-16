@@ -60,11 +60,15 @@ fn command_list(_matches: &ArgMatches) {
 }
 
 fn command_delete(matches: &ArgMatches) {
-    if let Some(task) = matches.value_of("task") {
-        if let Err(why) = Task::delete(task) {
-            println!("{}", why);
-        }
-    } else {
-        println!("Which one? Try e.g. `td delete 1`");
+    let task = match matches.value_of("task") {
+        Some(task) => task,
+        None => {
+            println!("Which one? Try e.g. `td delete 1`");
+            return;
+        },
+    };
+
+    if let Err(why) = Task::delete(task) {
+        println!("{}", why);
     }
 }
