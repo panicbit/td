@@ -48,24 +48,21 @@ fn main() {
 fn command_new(_matches: &ArgMatches) {
     let task = Task::new();
 
-    match task.save() {
-        Ok(_) => (),
-        Err(why) => println!("{}", why),
+    if let Err(why) = task.save() {
+        println!("{}", why);
     }
 }
 
 fn command_list(_matches: &ArgMatches) {
-    match Task::list_all() {
-        Ok(_) => (),
-        Err(why) => println!("{}", why),
+    if let Err(why) = Task::list_all() {
+        println!("{}", why);
     }
 }
 
 fn command_delete(matches: &ArgMatches) {
     if let Some(task) = matches.value_of("task") {
-        match Task::delete(task) {
-            Ok(_) => (),
-            Err(why) => println!("{}", why),
+        if let Err(why) = Task::delete(task) {
+            println!("{}", why);
         }
     } else {
         println!("Which one? Try e.g. `td delete 1`");
