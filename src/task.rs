@@ -1,4 +1,4 @@
-use std::fs::{create_dir, read_dir, remove_file, DirEntry, File};
+use std::fs::{create_dir_all, read_dir, remove_file, DirEntry, File};
 use std::io::{self, Read, Result, Write};
 use std::path::{Path, PathBuf};
 use std::fmt;
@@ -56,9 +56,7 @@ impl Task {
     pub fn save(&self) -> Result<()> {
         let td_path = td_path();
 
-        if !td_path.exists() {
-            create_dir(&td_path)?;
-        }
+        create_dir_all(&td_path)?;
 
         let now = Local::now().to_rfc3339();
         let filename = format!("{} {}", now, &self.task);
