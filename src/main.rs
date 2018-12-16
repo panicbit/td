@@ -3,11 +3,10 @@ extern crate serde_derive;
 extern crate chrono;
 extern crate ron;
 extern crate serde;
-
 extern crate clap;
-use clap::{App, Arg, SubCommand};
-
 extern crate dirs;
+
+use clap::{App, Arg, SubCommand};
 
 mod task;
 use task::Task;
