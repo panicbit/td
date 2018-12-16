@@ -1,6 +1,6 @@
 use std::fs::{create_dir, read_dir, remove_file, DirEntry, File};
 use std::io::{self, Read, Result, Write};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::fmt;
 use dirs::data_local_dir;
 use chrono::Local;
@@ -29,11 +29,7 @@ impl Task {
     }
 
     pub fn list_all() -> Result<()> {
-        let data_local_dir = match data_local_dir() {
-            Some(dir) => dir,
-            None => panic!("Could not open the local data directory"),
-        };
-        let td_path = Path::new(&data_local_dir).join("td");
+        let td_path = td_path();
 
         if !td_path.exists() {
             println!("Seems like you haven't added any tasks yet.");
@@ -58,11 +54,7 @@ impl Task {
     }
 
     pub fn save(&self) -> Result<()> {
-        let data_local_dir = match data_local_dir() {
-            Some(dir) => dir,
-            None => panic!("Could not open the local data directory"),
-        };
-        let td_path = Path::new(&data_local_dir).join("td");
+        let td_path = td_path();
 
         if !td_path.exists() {
             create_dir(&td_path)?;
@@ -81,11 +73,7 @@ impl Task {
 
     pub fn delete(task_n: &str) -> Result<()> {
         let n: usize = task_n.trim().parse().unwrap_or_else(|e| panic!("{}", e));
-        let data_local_dir = match data_local_dir() {
-            Some(dir) => dir,
-            None => panic!("Could not open the local data directory"),
-        };
-        let td_path = Path::new(&data_local_dir).join("td");
+        let td_path = td_path();
 
         if !td_path.exists() {
             println!("Seems like you haven't added any tasks yet.");
@@ -141,4 +129,14 @@ fn first_letter_to_upper(s: &str) -> String {
         None => String::new(),
         Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
     }
+}
+
+fn td_path() -> PathBuf {
+    let data_local_dir = match data_local_dir() {
+        Some(dir) => dir,
+        None => panic!("Could not open the local data directory"),
+    };
+    let td_path = Path::new(&data_local_dir).join("td");
+
+    td_path
 }
