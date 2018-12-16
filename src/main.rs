@@ -60,15 +60,23 @@ fn command_list(_matches: &ArgMatches) {
 }
 
 fn command_delete(matches: &ArgMatches) {
-    let task = match matches.value_of("task") {
-        Some(task) => task,
+    let task_n = match matches.value_of("task") {
+        Some(task_n) => task_n,
         None => {
             println!("Which one? Try e.g. `td delete 1`");
             return;
         },
     };
+    let task_n = parse_task_number(task_n);
 
-    if let Err(why) = Task::delete(task) {
+    if let Err(why) = Task::delete(task_n) {
         println!("{}", why);
     }
+}
+
+fn parse_task_number(task_n: &str) -> usize {
+    let task_n = task_n.trim().parse::<usize>()
+        .unwrap_or_else(|e| panic!("{}", e));
+
+    task_n
 }

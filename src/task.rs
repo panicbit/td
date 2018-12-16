@@ -69,8 +69,12 @@ impl Task {
         Ok(())
     }
 
-    pub fn delete(task_n: &str) -> Result<()> {
-        let n: usize = task_n.trim().parse().unwrap_or_else(|e| panic!("{}", e));
+    pub fn delete(task_n: usize) -> Result<()> {
+        if task_n <= 0 {
+            println!("Invalid task number");
+            return Ok(());
+        }
+        let task_index = task_n - 1;
         let td_path = td_path();
 
         if !td_path.exists() {
@@ -81,7 +85,7 @@ impl Task {
 
         let all_tasks: Vec<DirEntry> = read_dir(td_path)?.filter_map(Result::ok).collect();
         // TODO improve code below
-        let target_task = &all_tasks.get(n - 1);
+        let target_task = &all_tasks.get(task_index);
         let target_task = match target_task {
             Some(task) => task,
             None => {
